@@ -1,6 +1,7 @@
 package med.voll.api_voll.infra.errores;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ValidationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -23,6 +24,18 @@ public class TratadorDeErrores {
                 .toList();
 
         return ResponseEntity.badRequest().body(errores);
+    }
+
+    @ExceptionHandler(ValidacionDeIntegridad.class)
+    public ResponseEntity errorHandlerValidacionesDeIntegridad(ValidacionDeIntegridad e){
+
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity errorHandlerValidacionesDeNegocio(ValidationException e){
+
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     private record DatosErrorValiacion(
